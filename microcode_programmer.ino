@@ -87,15 +87,6 @@ const uint16_t HLT = 0b1000000000000000;  // Halt
 
 const byte INST_COUNT = 16;
 const byte MICRO_COUNT = 16;
-const byte FLAG_COUNT = 4;
-
-const uint16_t INST_BLOCK_LEN = INST_COUNT * MICRO_COUNT;
-const uint16_t BYTE_BLOCK_LEN = INST_BLOCK_LEN * FLAG_COUNT;
-
-const uint16_t LO_BYTES_START = 0;
-const uint16_t LO_BYTES_END = LO_BYTES_START + BYTE_BLOCK_LEN;
-const uint16_t HI_BYTES_START = BYTE_BLOCK_LEN;
-const uint16_t HI_BYTES_END = HI_BYTES_START + BYTE_BLOCK_LEN;
 
 const uint16_t INSTS[INST_COUNT][MICRO_COUNT] = {
   {MI|CO, RO|II|CE, 0,     0,     0,           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  // 0000 - NOP
@@ -120,6 +111,8 @@ const byte INST_JMP = 6;
 const byte INST_JC = 7;
 const byte INST_JZ = 8;
 
+const byte FLAG_COUNT = 4;
+
 const byte FLAG_CF = 0b01;
 const byte FLAG_ZF = 0b10;
 
@@ -137,24 +130,12 @@ void setup() {
 
   Serial.begin(115200);
 
-  Serial.print("LO bytes: ");
-  Serial.print(LO_BYTES_START);
-  Serial.print(" to ");
-  Serial.print(LO_BYTES_END);
-  Serial.print("\n");
-
-  Serial.print("HI bytes: ");
-  Serial.print(HI_BYTES_START);
-  Serial.print(" to ");
-  Serial.print(HI_BYTES_END);
-  Serial.print("\n");
-
   Serial.print("Programming EEPROM...\n");
   int i = 0;
-  for (byte bs = 0; bs < 2; bs++) {
-    for (byte fl = 0; fl < FLAG_COUNT; fl++) {
-      for (byte in = 0; in < INST_COUNT; in++) {
-        for (byte mc = 0; mc < MICRO_COUNT; mc++) {
+  for (byte bs = 0; bs < 2; ++bs) {
+    for (byte fl = 0; fl < FLAG_COUNT; ++fl) {
+      for (byte in = 0; in < INST_COUNT; ++in) {
+        for (byte mc = 0; mc < MICRO_COUNT; ++mc) {
           if (mc == 2) {
             if (
               (in == INST_JC && fl & FLAG_CF) ||
