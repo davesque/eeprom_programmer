@@ -16,7 +16,7 @@ void setAddress(int address, bool outputEnable) {
 }
 
 byte readRom(int address) {
-  for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin++) {
+  for (int pin = EEPROM_D0; pin <= EEPROM_D7; ++pin) {
     pinMode(pin, INPUT);
   }
 
@@ -31,13 +31,13 @@ byte readRom(int address) {
 }
 
 void writeRom(int address, byte data) {
-  for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin++) {
+  for (int pin = EEPROM_D0; pin <= EEPROM_D7; ++pin) {
     pinMode(pin, OUTPUT);
   }
 
   setAddress(address, /*outputEnable*/ false);
   
-  for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin++) {
+  for (int pin = EEPROM_D0; pin <= EEPROM_D7; ++pin) {
     digitalWrite(pin, data & 1);
     data >>= 1;
   }
@@ -51,7 +51,7 @@ void writeRom(int address, byte data) {
 void dumpRom(int range_start, int range_end) {
   for (int base = range_start; base < range_end; base += 16) {
     byte data[16];
-    for (int offset = 0; offset < 16; offset++) {
+    for (int offset = 0; offset < 16; ++offset) {
       data[offset] = readRom(base + offset);
     }
 

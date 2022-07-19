@@ -16,7 +16,7 @@ void setAddress(int address, bool outputEnable) {
 }
 
 byte readRom(int address) {
-  for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin++) {
+  for (int pin = EEPROM_D0; pin <= EEPROM_D7; ++pin) {
     pinMode(pin, INPUT);
   }
 
@@ -31,13 +31,13 @@ byte readRom(int address) {
 }
 
 void writeRom(int address, byte data) {
-  for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin++) {
+  for (int pin = EEPROM_D0; pin <= EEPROM_D7; ++pin) {
     pinMode(pin, OUTPUT);
   }
 
   setAddress(address, /*outputEnable*/ false);
   
-  for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin++) {
+  for (int pin = EEPROM_D0; pin <= EEPROM_D7; ++pin) {
     digitalWrite(pin, data & 1);
     data >>= 1;
   }
@@ -51,7 +51,7 @@ void writeRom(int address, byte data) {
 void dumpRom(int range_start, int range_end) {
   for (int base = range_start; base < range_end; base += 16) {
     byte data[16];
-    for (int offset = 0; offset < 16; offset++) {
+    for (int offset = 0; offset < 16; ++offset) {
       data[offset] = readRom(base + offset);
     }
 
@@ -101,7 +101,7 @@ void setup() {
 
   Serial.print("Erasing EEPROM...\n");
 
-  for (int i = 0; i < 2048; i++) {
+  for (int i = 0; i < 2048; ++i) {
     writeRom(i, 0);
   }
 
@@ -111,7 +111,7 @@ void setup() {
   const int tens_off = 0x01 << 8;
   const int hund_off = 0x02 << 8;
 
-  for (int i = 0; i < 256; i++) {
+  for (int i = 0; i < 256; ++i) {
     writeRom(i, digits[i % 10]);
     if (i >= 10) {
       writeRom(i | tens_off, digits[(i / 10) % 10]);
@@ -125,7 +125,7 @@ void setup() {
   const int thou_off = 0x03 << 8;
   const int two_comp_off = 0x04 << 8;
 
-  for (int i = -128; i < 128; i++) {
+  for (int i = -128; i < 128; ++i) {
     int i_addr = (byte)i | two_comp_off;
     int i_abs = abs(i);
 
